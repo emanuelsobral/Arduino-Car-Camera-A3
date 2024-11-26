@@ -9,8 +9,8 @@
 #include "esp_http_server.h"
 
 // Replace with your network credentials
-const char* ssid = "A Better Day For - Cima";
-const char* password = "bananafish";
+const char* ssid = "Wifi";
+const char* password = "Senha wifi";
 
 #define PART_BOUNDARY "123456789000000000000987654321"
 
@@ -120,10 +120,10 @@ const char* password = "bananafish";
   #error "Camera model not selected"
 #endif
 
-#define MOTOR_1_PIN_1    14    // Pino IN1 (Motor Esquerdo) -> IO2
-#define MOTOR_1_PIN_2    33   // Pino IN2 (Motor Esquerdo) -> IO14
-#define MOTOR_2_PIN_1    12   // Pino IN3 (Motor Direito) -> IO15
-#define MOTOR_2_PIN_2    13   // Pino IN4 (Motor Direito) -> IO13
+#define MOTOR_1_PIN_1    14    // Pino IN1 (Motor Esquerdo)
+#define MOTOR_1_PIN_2    33   // Pino IN2 (Motor Esquerdo)
+#define MOTOR_2_PIN_1    12   // Pino IN3 (Motor Direito)
+#define MOTOR_2_PIN_2    13   // Pino IN4 (Motor Direito)
 
 static const char* _STREAM_CONTENT_TYPE = "multipart/x-mixed-replace;boundary=" PART_BOUNDARY;
 static const char* _STREAM_BOUNDARY = "\r\n--" PART_BOUNDARY "\r\n";
@@ -140,93 +140,146 @@ static const char PROGMEM INDEX_HTML[] = R"rawliteral(
     <style>
       body {
         font-family: Arial, sans-serif;
-        text-align: center;
+        background-color: #f0f0f0;
         margin: 0;
-        padding-top: 30px;
-        background-color: #f4f4f4;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
       }
       h1 {
-        color: #2f4468;
+        margin: 20px 0;
+        color: #333;
       }
-      .button {
-        background-color: #2f4468;
-        border: none;
-        color: white;
-        padding: 15px 25px;
-        font-size: 20px;
-        margin: 10px 5px;
-        cursor: pointer;
+      .camera-container {
+        margin: 20px;
+        display: flex;
+        justify-content: center;
+      }
+      .camera {
+        border: 2px solid #555;
         border-radius: 8px;
-        width: 100px;
-      }
-      .button:hover {
-        background-color: #1e304b;
-      }
-      table {
-        margin: 20px auto;
-      }
-      td {
-        padding: 10px;
-      }
-      img {
-        width: auto;
-        max-width: 100%;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        width: 100%;
+        max-width: 400px;
         height: auto;
         transform: rotate(-90deg);
-        border: 2px solid #ccc;
-        border-radius: 10px;
-        margin-bottom: 20px;
+      }
+      .controls {
+        display: grid;
+        grid-template-columns: 100px 100px 100px;
+        grid-template-rows: 100px 100px 100px;
+        gap: 15px;
+        justify-content: center;
+        align-items: center;
+      }
+      .button {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background-color: #007bff;
+        color: white;
+        font-size: 18px;
+        font-weight: bold;
+        border: 2px solid transparent;
+        border-radius: 50%;
+        width: 70px;
+        height: 70px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        cursor: pointer;
+        transition: background-color 0.3s ease, transform 0.1s ease, box-shadow 0.3s ease;
+      }
+      .button:active {
+        background-color: #0056b3;
+        transform: scale(0.95);
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+      }
+      .stop-button {
+        background-color: #dc3545;
+        border: 2px solid #a71d2a;
+        grid-column: 2;
+        grid-row: 2;
+        width: 80px;
+        height: 80px;
+      }
+      .stop-button:active {
+        background-color: #a71d2a;
+      }
+      .up-button {
+        grid-column: 2;
+        grid-row: 1;
+      }
+      .left-button {
+        grid-column: 1;
+        grid-row: 2;
+      }
+      .right-button {
+        grid-column: 3;
+        grid-row: 2;
+      }
+      .down-button {
+        grid-column: 2;
+        grid-row: 3;
       }
     </style>
   </head>
   <body>
     <h1>ESP32-CAM Robot</h1>
-    <img src="" id="photo">
-    <table>
-      <tr>
-        <td colspan="3" align="center">
-          <button class="button" onmousedown="sendAction('forward');" 
-                  ontouchstart="sendAction('forward');" 
-                  onmouseup="sendAction('stop');" 
-                  ontouchend="sendAction('stop');">Forward</button>
-        </td>
-      </tr>
-      <tr>
-        <td align="center">
-          <button class="button" onmousedown="sendAction('left');" 
-                  ontouchstart="sendAction('left');" 
-                  onmouseup="sendAction('stop');" 
-                  ontouchend="sendAction('stop');">Left</button>
-        </td>
-        <td align="center">
-          <button class="button" onmousedown="sendAction('stop');" 
-                  ontouchstart="sendAction('stop');">Stop</button>
-        </td>
-        <td align="center">
-          <button class="button" onmousedown="sendAction('right');" 
-                  ontouchstart="sendAction('right');" 
-                  onmouseup="sendAction('stop');" 
-                  ontouchend="sendAction('stop');">Right</button>
-        </td>
-      </tr>
-      <tr>
-        <td colspan="3" align="center">
-          <button class="button" onmousedown="sendAction('backward');" 
-                  ontouchstart="sendAction('backward');" 
-                  onmouseup="sendAction('stop');" 
-                  ontouchend="sendAction('stop');">Backward</button>
-        </td>
-      </tr>
-    </table>
+    <div class="camera-container">
+      <img src="" id="photo" class="camera" alt="Camera feed">
+    </div>
+    <div class="controls">
+      <button class="button up-button" onmousedown="sendAction('forward');" 
+              ontouchstart="sendAction('forward');" 
+              onmouseup="sendAction('stop');" 
+              ontouchend="sendAction('stop');">&#9650;</button>
+      <button class="button left-button" onmousedown="sendAction('left');" 
+              ontouchstart="sendAction('left');" 
+              onmouseup="sendAction('stop');" 
+              ontouchend="sendAction('stop');">&#9664;</button>
+      <button class="button stop-button" onmousedown="sendAction('stop');" 
+              ontouchstart="sendAction('stop');">STOP</button>
+      <button class="button right-button" onmousedown="sendAction('right');" 
+              ontouchstart="sendAction('right');" 
+              onmouseup="sendAction('stop');" 
+              ontouchend="sendAction('stop');">&#9654;</button>
+      <button class="button down-button" onmousedown="sendAction('backward');" 
+              ontouchstart="sendAction('backward');" 
+              onmouseup="sendAction('stop');" 
+              ontouchend="sendAction('stop');">&#9660;</button>
+    </div>
     <script>
       function sendAction(action) {
         const xhr = new XMLHttpRequest();
         xhr.open("GET", `/action?go=${action}`, true);
         xhr.send();
       }
+
       window.onload = () => {
-        document.getElementById("photo").src = `${window.location.href.slice(0, -1)}:81/stream`;
+        const streamURL = `${window.location.origin}:81/stream`;
+        document.getElementById("photo").src = streamURL;
       };
+
+      // Add WASD key control
+      document.addEventListener('keydown', function(event) {
+        if(event.key === "w" || event.key === "ArrowUp") {
+          sendAction('forward');
+        } else if(event.key === "a" || event.key === "ArrowLeft") {
+          sendAction('left');
+        } else if(event.key === "s" || event.key === "ArrowDown") {
+          sendAction('backward');
+        } else if(event.key === "d" || event.key === "ArrowRight") {
+          sendAction('right');
+        } else if(event.key === " "){  // Detect spacebar press
+          sendAction('stop');  // Stop the robot when spacebar is pressed
+        }
+      });
+
+      document.addEventListener('keyup', function(event) {
+        if(["w", "a", "s", "d", "ArrowUp", "ArrowDown", "ArrowLeft", "ArrowRight"].includes(event.key)) {
+          sendAction('stop');
+        }
+      });
     </script>
   </body>
 </html>
