@@ -172,7 +172,7 @@ static const char PROGMEM INDEX_HTML[] = R"rawliteral(
         gap: 15px;
         justify-content: center;
         align-items: center;
-        margin-top: 2%;
+        margin-top: 2.5%;
       }
       .button {
         display: flex;
@@ -426,7 +426,18 @@ static esp_err_t cmd_handler(httpd_req_t *req){
     return httpd_resp_send_500(req);
   }
 
+  // Configurar cabeçalhos CORS
   httpd_resp_set_hdr(req, "Access-Control-Allow-Origin", "*");
+  httpd_resp_set_hdr(req, "Access-Control-Allow-Methods", "GET, POST, OPTIONS");
+  httpd_resp_set_hdr(req, "Access-Control-Allow-Headers", "Content-Type");
+
+  return httpd_resp_send(req, NULL, 0);
+}
+
+static esp_err_t options_handler(httpd_req_t *req) {
+  httpd_resp_set_hdr(req, "Access-Control-Allow-Origin", "*");
+  httpd_resp_set_hdr(req, "Access-Control-Allow-Methods", "GET, POST, OPTIONS");
+  httpd_resp_set_hdr(req, "Access-Control-Allow-Headers", "Content-Type");
   return httpd_resp_send(req, NULL, 0);
 }
 
@@ -451,7 +462,13 @@ void startCameraServer(){
     .method    = HTTP_GET,
     .handler   = stream_handler,
     .user_ctx  = NULL
+  };httpd_uri_t options_uri = {
+  .uri       = "/action",
+  .method    = HTTP_OPTIONS,
+  .handler   = options_handler,
+  .user_ctx  = NULL
   };
+httpd_register_uri_handler(camera_httpd, &options_uri);
   if (httpd_start(&camera_httpd, &config) == ESP_OK) {
     httpd_register_uri_handler(camera_httpd, &index_uri);
     httpd_register_uri_handler(camera_httpd, &cmd_uri);
