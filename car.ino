@@ -9,8 +9,8 @@
 #include "esp_http_server.h"
 
 // Replace with your network credentials
-const char* ssid = "Wifi";
-const char* password = "Senha wifi";
+const char* ssid = "A Better Day For - Cima";
+const char* password = "bananafish";
 
 #define PART_BOUNDARY "123456789000000000000987654321"
 
@@ -172,6 +172,7 @@ static const char PROGMEM INDEX_HTML[] = R"rawliteral(
         gap: 15px;
         justify-content: center;
         align-items: center;
+        margin-top: 2%;
       }
       .button {
         display: flex;
