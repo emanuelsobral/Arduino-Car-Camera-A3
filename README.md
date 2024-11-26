@@ -2,7 +2,7 @@
 Arduino Car With Camera
 
 
-#Credits of the code base
+# Credits of the code base
 
   Rui Santos
   Complete instructions at https://RandomNerdTutorials.com/esp32-cam-projects-ebook/
