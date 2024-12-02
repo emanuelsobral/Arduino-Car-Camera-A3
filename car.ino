@@ -9,8 +9,8 @@
 #include "esp_http_server.h"
 
 // Replace with your network credentials
-const char* ssid = "Wifi";
-const char* password = "Senha Wifi";
+const char* ssid = "A Better Day For - Cima";
+const char* password = "bananafish";
 
 #define PART_BOUNDARY "123456789000000000000987654321"
 
@@ -123,7 +123,7 @@ const char* password = "Senha Wifi";
 #define MOTOR_1_PIN_1    14    // Pino IN1 (Motor Esquerdo)
 #define MOTOR_1_PIN_2    33   // Pino IN2 (Motor Esquerdo)
 #define MOTOR_2_PIN_1    12   // Pino IN3 (Motor Direito)
-#define MOTOR_2_PIN_2    13   // Pino IN4 (Motor Direito)
+#define MOTOR_2_PIN_2    13   // Pino IN4 (Motor Direito)
 
 static const char* _STREAM_CONTENT_TYPE = "multipart/x-mixed-replace;boundary=" PART_BOUNDARY;
 static const char* _STREAM_BOUNDARY = "\r\n--" PART_BOUNDARY "\r\n";
