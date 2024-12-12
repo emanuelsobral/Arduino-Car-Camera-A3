@@ -24,10 +24,15 @@ Arduino Car With Camera
 # Hardware:
 
    Microcontrolador ESP32: Coração do projeto, responsável por controlar todos os componentes e processar as informações da câmera.
+
    Módulo ESP32-CAM: Combina uma câmera OV2640 ou OV7670 com o microcontrolador ESP32, simplificando a integração de visão computacional.
+
    Driver de motor L298N: Controla os dois motores DC do robô, permitindo movimentos para frente, para trás, esquerda e direita.
+
    Motores DC: Impulsionam o robô, proporcionando a locomoção.  
+
    Fonte de alimentação: Bateria ou fonte externa para alimentar o ESP32 e os motores.
+
    Placa de prototipagem (opcional): Facilita a montagem e a conexão dos componentes.
 
 # Software:
